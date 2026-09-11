@@ -359,8 +359,10 @@ function renderContact(root) {
   card.append(textField('subheading').render(c));
   card.append(el('label', { class: 'f' }, '說明文字（留白＝不顯示）'));
   card.append(textField('paragraph', { area: true }).render(c));
-  card.append(el('label', { class: 'f' }, '地圖位置（可填「緯度,經度」或地址；地址搬家時改這裡＋網站設定的地址）'));
+  card.append(el('label', { class: 'f' }, '地圖位置（可填「緯度,經度」或地址；「開啟 Google Maps」按鈕會連到這裡。地址搬家時改這裡＋網站設定的地址）'));
   card.append(textField('mapQuery').render(c));
+  card.append(el('label', { class: 'f' }, '地圖插圖（留白＝改用內嵌的 Google 地圖）'));
+  card.append(imageField('mapImage').render(c));
   root.append(card);
   root.append(el('div', { class: 'small-note' }, '地址、電話、傳真、Email 顯示在每一頁的頁尾和聯絡頁，請到「網站設定」分頁修改。'));
 }

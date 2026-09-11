@@ -302,7 +302,16 @@ ${gallery}
 
 /* ---------- 聯絡 ---------- */
 {
+  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(contact.mapQuery)}`;
   const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(contact.mapQuery)}&hl=zh-TW&z=16&output=embed`;
+  const mapHtml = contact.mapImage
+    ? `      <div>
+        <a class="map-illustration" href="${attr(mapsUrl)}" target="_blank" rel="noopener"><img src="${attr(contact.mapImage)}" alt="${attr(contact.mapLabel)} 位置地圖"></a>
+        <div class="btn-row center"><a class="btn" href="${attr(mapsUrl)}" target="_blank" rel="noopener">開啟 Google Maps</a></div>
+      </div>`
+    : `      <div class="map-frame">
+        <iframe src="${attr(mapSrc)}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="${attr(contact.mapLabel)} 地圖"></iframe>
+      </div>`;
   const body = `<section class="section">
   <div class="container">
     <div class="center">
@@ -316,9 +325,7 @@ ${contact.paragraph ? `      <p style="color:var(--soft);">${esc(contact.paragra
         <li><span class="k">Fax</span><span>${esc(site.fax)}</span></li>
         <li><span class="k">Email</span><a href="mailto:${attr(site.email)}">${esc(site.email)}</a></li>
       </ul>
-      <div class="map-frame">
-        <iframe src="${attr(mapSrc)}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="${attr(contact.mapLabel)} 地圖"></iframe>
-      </div>
+${mapHtml}
     </div>
   </div>
 </section>`;
