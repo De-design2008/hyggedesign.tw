@@ -52,7 +52,7 @@ a { color: inherit; text-decoration: none; }
 .hero-copy {
   display: flex; flex-direction: column; justify-content: center;
   padding: 60px clamp(28px, 5vw, 72px);
-  background: var(--bg);
+  background: #fff;
 }
 .hero-copy .eyebrow { margin-bottom: 22px; }
 .hero-copy h1 {
