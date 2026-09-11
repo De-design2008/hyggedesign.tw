@@ -198,7 +198,10 @@ p { text-wrap: pretty; }
   display: grid; grid-template-columns: 1fr auto; gap: 28px; align-items: start;
   padding-bottom: 36px; border-bottom: 1px solid #f6f1e922; margin-bottom: 22px;
 }
-.site-footer .brandline { font-family: var(--serif-tc); font-size: 22px; font-weight: 600; letter-spacing: 0.16em; color: #f6f1e9; }
+.site-footer .brandline { font-family: var(--serif-tc); font-size: 22px; font-weight: 600; letter-spacing: 0.16em; color: #f6f1e9; display: flex; align-items: flex-start; gap: 14px; }
+/* logo 與整個雙行文字區塊等高：margin-top 跳過字頂上方的半行距（11px），
+   56px 高度讓下緣落在 HYGGE DESIGN 底線附近，整組成為一個對齊的方塊 */
+.site-footer .footer-logo { width: 56px; height: 56px; margin-top: 11px; }
 .site-footer .brandline span { display: block; font-family: var(--serif); font-size: 12px; font-weight: 400; letter-spacing: 0.34em; color: #d8c3a5; text-transform: uppercase; margin-top: 6px; }
 .site-footer .info { font-size: 14.5px; line-height: 2.2; text-align: right; }
 .site-footer a:hover { color: #f6f1e9; }

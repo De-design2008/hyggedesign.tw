@@ -64,7 +64,7 @@ function footer() {
   return `<footer class="site-footer">
   <div class="container">
     <div class="cols">
-      <div class="brandline">${esc(site.brandShort)}<span>Hygge Design</span></div>
+      <div class="brandline"><img class="footer-logo" src="/assets/img/logo.png" alt=""><div>${esc(site.brandShort)}<span>Hygge Design</span></div></div>
       <div class="info">
         ${esc(site.address)}<br>
         TEL <a href="tel:${attr(site.tel.replace(/-/g, ''))}">${esc(site.tel)}</a>　·　FAX ${esc(site.fax)}<br>
