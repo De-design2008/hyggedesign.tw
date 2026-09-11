@@ -26,6 +26,10 @@ body {
 }
 img { max-width: 100%; display: block; }
 a { color: inherit; text-decoration: none; }
+/* pretty＝避免段落最後一行只剩一兩個字；balance＝置中短句各行長度分勻。
+   舊瀏覽器不認識就直接忽略，無副作用 */
+p { text-wrap: pretty; }
+.center p, .section-title, .teaser h2, .hero-copy .tag { text-wrap: balance; }
 .container { max-width: 1140px; margin: 0 auto; padding: 0 28px; }
 .narrow { max-width: 780px; }
 
