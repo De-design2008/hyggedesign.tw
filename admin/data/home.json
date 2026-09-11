@@ -2,7 +2,8 @@
   "hero": {
     "titleLine1": "Enjoy Your",
     "titleLine2": "Hygge Lifestyle.",
-    "image": "/assets/img/style-minimal.jpg"
+    "image": "/assets/img/hero.jpg",
+    "video": "/assets/video/hero.mp4"
   },
   "about": {
     "heading": "About Us",
