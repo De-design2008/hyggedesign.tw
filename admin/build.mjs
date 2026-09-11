@@ -18,6 +18,10 @@ const projects = await load('projects.json');
 const contact = await load('contact.json');
 
 const esc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+// 置中短句用：把句子按標點切成語意段，每段包成 inline-block，
+// 換行就只會發生在標點後面，不會把「我們」這種詞從中間切開
+const clauses = s => String(s ?? '').split(/(?<=[，。；！？、])/).filter(Boolean)
+  .map(seg => `<span class="clause">${esc(seg)}</span>`).join('');
 const attr = s => String(s ?? '').replace(/&/g, '&amp;').replace(/"/g, '&quot;');
 
 const pageTitle = name => name ? `${name} - ${site.brand}` : `${site.brand} - ${site.tagline}`;
@@ -263,7 +267,7 @@ const lightboxHtml = `
     <div class="center">
       <div class="eyebrow">Works</div>
       <h2 class="section-title">作品</h2>
-${projects.intro ? `      <p style="color:var(--soft); letter-spacing:.12em;">${esc(projects.intro)}</p>\n` : ''}    </div>
+${projects.intro ? `      <p style="color:var(--soft); letter-spacing:.12em;">${clauses(projects.intro)}</p>\n` : ''}    </div>
     <div class="project-grid">
 ${cards}
     </div>
@@ -315,7 +319,7 @@ ${gallery}
     <div class="center">
       <div class="eyebrow">${esc(contact.heading)}</div>
       <h2 class="section-title">${esc(contact.subheading)}</h2>
-${contact.paragraph ? `      <p style="color:var(--soft);">${esc(contact.paragraph)}</p>\n` : ''}    </div>
+${contact.paragraph ? `      <p style="color:var(--soft);">${clauses(contact.paragraph)}</p>\n` : ''}    </div>
     <div class="contact-grid">
       <ul class="contact-list">
         <li><span class="k">Address</span><span>${esc(site.address)}</span></li>
