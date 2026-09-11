@@ -294,6 +294,17 @@ function renderHome(root) {
   acard.append(paragraphsField('paragraphs', { label: '' }).render(data.home.about));
   root.append(acard);
 
+  if (!data.home.story) data.home.story = { image: '', heading: '', btnLabel: '' };
+  const scard = el('div', { class: 'card' }, el('h3', {}, '底部「品牌故事」區塊'));
+  scard.append(el('div', { class: 'hint' }, '首頁最下方的全幅圖片區塊，按鈕連到「關於（源起）」頁。圖片留白＝整塊隱藏。'));
+  scard.append(el('label', { class: 'f' }, '背景圖片（會壓深色漸層，深色調的照片效果最好）'));
+  scard.append(imageField('image').render(data.home.story));
+  scard.append(el('label', { class: 'f' }, '標題'));
+  scard.append(textField('heading').render(data.home.story));
+  scard.append(el('label', { class: 'f' }, '按鈕文字'));
+  scard.append(textField('btnLabel').render(data.home.story));
+  root.append(scard);
+
   root.append(el('h3', { style: 'margin:18px 0 10px;' }, '北歐風格卡片'));
   root.append(rowsEditor(data.home.styles, [
     textField('title', { label: '風格名稱', retitle: true }),

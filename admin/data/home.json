@@ -26,5 +26,10 @@
       "title": "Nordic Minimalist",
       "image": "/assets/img/style-minimal.jpg"
     }
-  ]
+  ],
+  "story": {
+    "image": "/assets/img/about-2.png",
+    "heading": "從大易設計到悠+，同一份對居住品質的堅持",
+    "btnLabel": "認識悠+的源起"
+  }
 }

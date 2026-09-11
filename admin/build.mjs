@@ -101,8 +101,6 @@ const prose = sections => sections.map(sec =>
         <div class="ph"><img src="${attr(s.image)}" alt="${attr(s.title)}" loading="lazy"></div>
         <figcaption><span class="no">${String(i + 1).padStart(2, '0')}</span><span class="name">${esc(s.title)}</span></figcaption>
       </figure>`).join('\n');
-  const firstCase = projects.items[0];
-
   const body = `<section class="hero-split">
   <div class="hero-copy">
     <div class="eyebrow">Hygge Design</div>
@@ -142,12 +140,12 @@ ${styles}
   </div>
 </section>
 
-${(firstCase && firstCase.cover) ? `<section class="teaser">
-  <img src="${attr(firstCase.cover)}" alt="" loading="lazy">
+${(home.story && home.story.image) ? `<section class="teaser">
+  <img src="${attr(home.story.image)}" alt="" loading="lazy">
   <div class="container">
-    <div class="eyebrow">Selected Works</div>
-    <h2>看看我們如何詮釋每一個家</h2>
-    <a class="btn" href="/works.html">作品選輯</a>
+    <div class="eyebrow">Our Story</div>
+    <h2>${esc(home.story.heading)}</h2>
+    <a class="btn" href="/about.html">${esc(home.story.btnLabel)}</a>
   </div>
 </section>` : ''}`;
 
