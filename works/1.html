@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>惠宇敦南 - 悠+設計 HYGGE DESIGN</title>
+<meta name="description" content="悠+設計：五感生活心體驗。擅長北歐風格的台中室內設計公司，致力於減少不必要的裝修，營造無毒環保的生活環境。">
+<meta name="keywords" content="北歐風,室內設計,hygge,悠+,台中室內設計">
+<link rel="canonical" href="https://www.hyggedesign.tw/works/1.html">
+<meta property="og:site_name" content="悠+設計 HYGGE DESIGN">
+<meta property="og:title" content="惠宇敦南 - 悠+設計 HYGGE DESIGN">
+<meta property="og:description" content="悠+設計：五感生活心體驗。擅長北歐風格的台中室內設計公司，致力於減少不必要的裝修，營造無毒環保的生活環境。">
+<meta property="og:url" content="https://www.hyggedesign.tw/works/1.html">
+<meta property="og:image" content="https://www.hyggedesign.tw/assets/img/projects/1/01.jpg">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif+TC:wght@500;600&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a class="brand" href="/"><strong>悠+設計</strong><span>Hygge Design</span></a>
+    <nav class="site-nav">
+      <a href="/">首頁</a>
+      <a href="/about.html">關於</a>
+      <a href="/hygge.html">設計理念</a>
+      <a href="/works.html" class="active">作品</a>
+      <a href="/contact.html">聯絡</a>
+    </nav>
+  </div>
+</header>
+
+<section class="section">
+  <div class="container">
+    <div class="center">
+      <div class="eyebrow">Works</div>
+      <h2 class="section-title">惠宇敦南</h2>
+    </div>
+    <div class="gallery">
+      <a href="/assets/img/projects/1/01.jpg"><img src="/assets/img/projects/1/01.jpg" alt="惠宇敦南" loading="lazy"></a>
+      <a href="/assets/img/projects/1/03.jpg"><img src="/assets/img/projects/1/03.jpg" alt="惠宇敦南" loading="lazy"></a>
+      <a href="/assets/img/projects/1/04.jpg"><img src="/assets/img/projects/1/04.jpg" alt="惠宇敦南" loading="lazy"></a>
+      <a href="/assets/img/projects/1/05.jpg"><img src="/assets/img/projects/1/05.jpg" alt="惠宇敦南" loading="lazy"></a>
+      <a href="/assets/img/projects/1/06.jpg"><img src="/assets/img/projects/1/06.jpg" alt="惠宇敦南" loading="lazy"></a>
+      <a href="/assets/img/projects/1/08.jpg"><img src="/assets/img/projects/1/08.jpg" alt="惠宇敦南" loading="lazy"></a>
+      <a href="/assets/img/projects/1/15.jpg"><img src="/assets/img/projects/1/15.jpg" alt="惠宇敦南" loading="lazy"></a>
+      <a href="/assets/img/projects/1/18.jpg"><img src="/assets/img/projects/1/18.jpg" alt="惠宇敦南" loading="lazy"></a>
+    </div>
+    <a class="back-link" href="/works.html">← 回作品列表</a>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="cols">
+      <div class="brandline">悠+設計<span>Hygge Design</span></div>
+      <div class="info">
+        407 台中市西屯區市政北七路 186 號 10 樓之 6<br>
+        TEL <a href="tel:0422582227">04-2258-2227</a>　·　FAX 04-2258-2270<br>
+        EMAIL <a href="mailto:hyggelife186@gmail.com">hyggelife186@gmail.com</a>
+      </div>
+    </div>
+    <p class="copy">© COPYRIGHT 2021-2026. ALL RIGHTS RESERVED.</p>
+  </div>
+</footer>
+
+<div class="lightbox" id="lightbox">
+  <button class="lb-close" aria-label="關閉">×</button>
+  <button class="lb-prev" aria-label="上一張">‹</button>
+  <button class="lb-next" aria-label="下一張">›</button>
+  <img alt="">
+</div>
+<script>
+(function () {
+  var box = document.getElementById('lightbox');
+  var img = box.querySelector('img');
+  var links = Array.prototype.slice.call(document.querySelectorAll('.gallery a'));
+  var idx = 0;
+  function show(i) {
+    idx = (i + links.length) % links.length;
+    img.src = links[idx].getAttribute('href');
+    box.classList.add('open');
+  }
+  links.forEach(function (a, i) {
+    a.addEventListener('click', function (e) { e.preventDefault(); show(i); });
+  });
+  box.querySelector('.lb-close').addEventListener('click', function () { box.classList.remove('open'); });
+  box.querySelector('.lb-prev').addEventListener('click', function (e) { e.stopPropagation(); show(idx - 1); });
+  box.querySelector('.lb-next').addEventListener('click', function (e) { e.stopPropagation(); show(idx + 1); });
+  box.addEventListener('click', function (e) { if (e.target === box || e.target === img) box.classList.remove('open'); });
+  document.addEventListener('keydown', function (e) {
+    if (!box.classList.contains('open')) return;
+    if (e.key === 'Escape') box.classList.remove('open');
+    if (e.key === 'ArrowLeft') show(idx - 1);
+    if (e.key === 'ArrowRight') show(idx + 1);
+  });
+})();
+</script>
+</body>
+</html>

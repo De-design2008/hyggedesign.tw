@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>悠+設計 網站管理後台</title>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* 與前台 assets/style.css 同一組暖棕色，改前台時記得一起改 */
+  --bg:#faf8f5; --ink:#33322e; --soft:#7d7a72; --line:#9a846845;
+  --accent:#9a8468; --accent-dark:#7c684f; --surface:#fff; --muted:#f1ece5;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif; background:var(--bg); color:var(--ink); font-size:15px; line-height:1.7; }
+.layout { display:grid; grid-template-columns:210px 1fr; min-height:100vh; }
+aside { background:#ede7de; border-right:1px solid var(--line); padding:20px 12px; }
+aside h1 { font-size:17px; letter-spacing:1px; padding:0 10px 14px; }
+aside h1 span { display:block; font-size:12px; color:var(--soft); font-weight:400; letter-spacing:2px; }
+.tab { display:block; width:100%; text-align:left; border:0; background:none; padding:9px 12px; border-radius:10px; font-size:15px; color:var(--soft); cursor:pointer; font-family:inherit; }
+.tab:hover { background:#e3dbcf; color:var(--ink); }
+.tab.active { background:var(--accent); color:#fff; font-weight:500; }
+main { padding:24px 32px 80px; max-width:900px; }
+.topbar { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:18px; flex-wrap:wrap; }
+.topbar h2 { font-size:22px; }
+.actions { display:flex; gap:8px; flex-wrap:wrap; }
+button.btn { border:0; border-radius:999px; padding:9px 20px; font-size:15px; cursor:pointer; font-family:inherit; font-weight:500; }
+.btn-primary { background:var(--accent); color:#fff; }
+.btn-primary:hover { background:var(--accent-dark); }
+.btn-ghost { background:var(--surface); border:1px solid var(--line); color:var(--ink); }
+.btn-ghost:hover { background:var(--muted); }
+.btn-mini { border:1px solid var(--line); background:var(--surface); border-radius:8px; padding:2px 9px; font-size:13px; cursor:pointer; color:var(--soft); font-family:inherit; }
+.btn-mini:hover { background:var(--muted); color:var(--ink); }
+.btn-danger:hover { background:#f6e4e1; color:#9a4b3f; }
+.card { background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:18px 20px; margin-bottom:16px; box-shadow:0 10px 30px #85705a0d; }
+.card h3 { font-size:16px; margin-bottom:4px; }
+.hint { font-size:13px; color:var(--soft); margin-bottom:10px; }
+label.f { display:block; font-size:13px; color:var(--soft); margin:10px 0 3px; }
+input[type=text], textarea, select {
+  width:100%; border:1px solid #9a846840; border-radius:10px; padding:8px 12px; font-size:15px; font-family:inherit; background:#fff; color:var(--ink);
+}
+textarea { min-height:76px; resize:vertical; line-height:1.7; }
+input:focus, textarea:focus { outline:2px solid #c3b29e66; border-color:var(--accent); }
+.row-head { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+.row-tools { display:flex; gap:5px; }
+.grid2 { display:grid; grid-template-columns:1fr 1fr; gap:0 16px; }
+.imgfield { display:flex; gap:8px; align-items:center; }
+.imgfield input { flex:1; }
+.thumb { width:66px; height:44px; object-fit:cover; border-radius:8px; border:1px solid var(--line); background:var(--muted); }
+.gal { display:grid; grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:12px; margin-top:8px; }
+.gal-item { border:1px solid var(--line); border-radius:10px; overflow:hidden; background:var(--muted); }
+.gal-item img { width:100%; aspect-ratio:3/2; object-fit:cover; display:block; }
+.gal-item .bar { display:flex; justify-content:center; gap:4px; padding:5px; background:var(--surface); }
+#toast { position:fixed; left:50%; bottom:26px; transform:translateX(-50%); background:var(--ink); color:#fff; border-radius:999px; padding:10px 24px; font-size:15px; opacity:0; transition:opacity .25s; pointer-events:none; max-width:90vw; z-index:99; }
+#toast.show { opacity:1; }
+#toast.err { background:#8f4c40; }
+.divider { border-top:1px dashed var(--line); margin:14px 0; }
+.small-note { font-size:13px; color:var(--soft); background:var(--muted); border-radius:10px; padding:10px 14px; margin-bottom:16px; }
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>悠+設計<span>網站管理後台</span></h1>
+    <nav id="tabs"></nav>
+  </aside>
+  <main>
+    <div class="topbar">
+      <h2 id="pageTitle"></h2>
+      <div class="actions">
+        <button class="btn btn-ghost" onclick="window.open('/', '_blank')">預覽網站</button>
+        <button class="btn btn-primary" id="saveBtn" onclick="saveCurrent()">儲存並更新網站</button>
+        <button class="btn btn-ghost" id="publishBtn" onclick="publish()">發布上線</button>
+      </div>
+    </div>
+    <div id="content"></div>
+  </main>
+</div>
+<div id="toast"></div>
+
+<script>
+'use strict';
+const TABS = [
+  ['projects', '案例作品'], ['home', '首頁'], ['about', '關於（源起）'],
+  ['hygge', '設計理念'], ['contact', '聯絡'], ['site', '網站設定'],
+];
+let current = 'projects';
+let data = {};          // 各資料表目前的編輯狀態
+let gitReady = false;
+
+const $ = sel => document.querySelector(sel);
+const el = (tag, attrs = {}, ...children) => {
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === 'class') n.className = v;
+    else if (k.startsWith('on')) n.addEventListener(k.slice(2), v);
+    else if (k === 'value') n.value = v;
+    else n.setAttribute(k, v);
+  }
+  for (const c of children) n.append(c);
+  return n;
+};
+
+function toast(msg, isErr) {
+  const t = $('#toast');
+  t.textContent = msg;
+  t.className = 'show' + (isErr ? ' err' : '');
+  clearTimeout(t._h);
+  t._h = setTimeout(() => t.className = '', isErr ? 6000 : 3000);
+}
+
+async function api(url, opts) {
+  const r = await fetch(url, opts);
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.error || ('HTTP ' + r.status));
+  return j;
+}
+
+// 各分頁載入時的資料版本。儲存時一併送回讓伺服器比對，
+// 檔案若在編輯期間被別處改過就會被擋下，而不是無聲覆蓋。
+const dataVersion = {};
+async function loadData(name) {
+  const r = await fetch('/api/data/' + name);
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.error || ('HTTP ' + r.status));
+  dataVersion[name] = r.headers.get('X-Data-Version') || '';
+  return j;
+}
+
+async function uploadFile(f, folder) {
+  return api('/api/upload?name=' + encodeURIComponent(f.name) + (folder ? '&folder=' + encodeURIComponent(folder) : ''),
+    { method: 'POST', body: f });
+}
+
+/* ---------- 通用編輯元件 ---------- */
+// 物件列表（可新增／刪除／排序）
+function rowsEditor(list, fields, makeNew, titleOf, opts = {}) {
+  const changed = () => { if (opts.onChange) opts.onChange(); };
+  const wrap = el('div');
+  const render = () => {
+    wrap.innerHTML = '';
+    wrap.append(el('button', { class: 'btn btn-ghost', style: 'margin-bottom:14px;', onclick: () => { list.unshift(makeNew()); render(); changed(); } }, '＋ 新增一項'));
+    list.forEach((item, i) => {
+      const tools = el('div', { class: 'row-tools' },
+        el('button', { class: 'btn-mini', title: '上移', onclick: () => { if (i > 0) { [list[i-1], list[i]] = [list[i], list[i-1]]; render(); changed(); } } }, '↑'),
+        el('button', { class: 'btn-mini', title: '下移', onclick: () => { if (i < list.length - 1) { [list[i+1], list[i]] = [list[i], list[i+1]]; render(); changed(); } } }, '↓'),
+        el('button', { class: 'btn-mini btn-danger', onclick: () => { if (confirm('確定要刪除「' + (titleOf(item) || '這一項') + '」嗎？')) { list.splice(i, 1); render(); changed(); } } }, '刪除'),
+      );
+      const card = el('div', { class: 'card' },
+        el('div', { class: 'row-head' }, el('h3', {}, titleOf(item) || '（未命名）'), tools));
+      const grid = el('div', { class: fields.filter(f => f.half).length ? 'grid2' : '' });
+      for (const f of fields) {
+        const holder = f.half ? grid : card;
+        holder.append(el('label', { class: 'f' }, f.label));
+        holder.append(f.render(item, () => render()));
+      }
+      if (grid.children.length) card.append(grid);
+      wrap.append(card);
+    });
+  };
+  render();
+  return wrap;
+}
+
+const textField = (key, opts = {}) => ({
+  label: opts.label || key, half: opts.half,
+  render: (item, rerender) => {
+    const inp = el(opts.area ? 'textarea' : 'input', { type: 'text', value: item[key] || '',
+      oninput: () => { item[key] = inp.value; }, onchange: () => { if (opts.retitle) rerender(); } });
+    if (opts.placeholder) inp.placeholder = opts.placeholder;
+    return inp;
+  },
+});
+
+// 多段文字：以空一行分段
+const paragraphsField = (key, opts = {}) => ({
+  label: opts.label || '內文（空一行＝分段）',
+  render: (item) => {
+    const ta = el('textarea', { style: 'min-height:150px;', oninput: () => {
+      item[key] = ta.value.split(/\n\s*\n/).map(s => s.trim().replace(/\s*\n\s*/g, '')).filter(Boolean);
+    } });
+    ta.value = (item[key] || []).join('\n\n');
+    return ta;
+  },
+});
+
+const isImagePath = v => /\.(png|jpe?g|gif|webp|svg)(\?|#|$)/i.test(v || '');
+const imageField = (key, opts = {}) => ({
+  label: opts.label || '圖片',
+  render: (item) => {
+    const sync = () => {
+      img.src = isImagePath(item[key]) ? item[key] : '';
+      img.style.display = isImagePath(item[key]) ? '' : 'none';
+    };
+    const inp = el('input', { type: 'text', value: item[key] || '', oninput: () => { item[key] = inp.value; sync(); } });
+    const img = el('img', { class: 'thumb', src: '' });
+    sync();
+    const file = el('input', { type: 'file', accept: opts.accept || 'image/*', style: 'display:none', onchange: async () => {
+      const f = file.files[0];
+      if (!f) return;
+      try {
+        const r = await uploadFile(f, opts.folder && opts.folder(item));
+        item[key] = r.path; inp.value = r.path; sync();
+        toast('已上傳：' + r.path);
+      } catch (e) { toast('上傳失敗：' + e.message, true); }
+    }});
+    const btn = el('button', { class: 'btn-mini', onclick: () => file.click() }, '上傳檔案');
+    return el('div', { class: 'imgfield' }, img, inp, btn, file);
+  },
+});
+
+// 案例相簿：多選上傳＋縮圖排序
+const galleryField = (key, opts = {}) => ({
+  label: opts.label || '照片（會依這裡的順序顯示）',
+  render: (item) => {
+    if (!Array.isArray(item[key])) item[key] = [];
+    const list = item[key];
+    const wrap = el('div');
+    const render = () => {
+      wrap.innerHTML = '';
+      const file = el('input', { type: 'file', accept: 'image/*', multiple: '', style: 'display:none', onchange: async () => {
+        const files = Array.from(file.files);
+        if (!files.length) return;
+        toast('上傳中…（共 ' + files.length + ' 張）');
+        try {
+          for (const f of files) {
+            const r = await uploadFile(f, opts.folder && opts.folder(item));
+            list.push(r.path);
+          }
+          render();
+          toast('已上傳 ' + files.length + ' 張照片。記得按「儲存並更新網站」。');
+        } catch (e) { render(); toast('上傳失敗：' + e.message, true); }
+      }});
+      wrap.append(el('button', { class: 'btn-mini', onclick: () => file.click() }, '＋ 上傳照片（可一次選多張）'), file);
+      const gal = el('div', { class: 'gal' });
+      list.forEach((src, i) => {
+        gal.append(el('div', { class: 'gal-item' },
+          el('img', { src }),
+          el('div', { class: 'bar' },
+            el('button', { class: 'btn-mini', title: '往前', onclick: () => { if (i > 0) { [list[i-1], list[i]] = [list[i], list[i-1]]; render(); } } }, '←'),
+            el('button', { class: 'btn-mini', title: '往後', onclick: () => { if (i < list.length - 1) { [list[i+1], list[i]] = [list[i], list[i+1]]; render(); } } }, '→'),
+            el('button', { class: 'btn-mini btn-danger', onclick: () => { if (confirm('確定移除這張照片嗎？（檔案仍會留在資料夾裡）')) { list.splice(i, 1); render(); } } }, '移除'),
+          )));
+      });
+      wrap.append(gal);
+    };
+    render();
+    return wrap;
+  },
+});
+
+/* ---------- 各分頁 ---------- */
+function renderProjects(root) {
+  const P = data.projects;
+  root.append(el('div', { class: 'small-note' },
+    '新增裝修案例：按「＋ 新增一項」，填案名，然後按「＋ 上傳照片」把完工照一次選進來。'
+    + '第一張照片會自動當作品列表的封面（也可以另外指定）。改完記得按右上角「儲存並更新網站」，'
+    + '確認沒問題後再按「發布上線」。'));
+
+  const bcard = el('div', { class: 'card' }, el('h3', {}, '作品頁橫幅'));
+  bcard.append(el('label', { class: 'f' }, '頁面上方的大圖'));
+  bcard.append(imageField('banner').render(P));
+  bcard.append(el('label', { class: 'f' }, '開頭引言（留白＝不顯示）'));
+  bcard.append(textField('intro').render(P));
+  root.append(bcard);
+
+  root.append(rowsEditor(P.items, [
+    textField('title', { label: '案名（例：惠宇敦南）', retitle: true }),
+    textField('subtitle', { label: '副標（選填，例：新成屋｜42 坪）' }),
+    textField('desc', { label: '案例介紹（選填）', area: true }),
+    imageField('cover', { label: '封面（留白＝自動用第一張照片）', folder: it => it.slug }),
+    galleryField('images', { folder: it => it.slug }),
+  ], () => ({
+    // 網址與照片資料夾用流水號：取目前最大的號碼＋1，刪除舊案例也不會重複
+    slug: String(Math.max(0, ...P.items.map(it => parseInt(it.slug, 10) || 0)) + 1),
+    title: '', subtitle: '', desc: '', cover: '', images: [],
+  }), it => it.title));
+}
+
+function renderHome(root) {
+  const h = data.home.hero;
+  const card = el('div', { class: 'card' }, el('h3', {}, '主視覺區'));
+  card.append(el('label', { class: 'f' }, '英文標題（上行）'));
+  card.append(textField('titleLine1').render(h));
+  card.append(el('label', { class: 'f' }, '英文標題（下行）'));
+  card.append(textField('titleLine2').render(h));
+  card.append(el('label', { class: 'f' }, '主視覺圖片（橫幅 3:2，建議 1920×1280 以上）'));
+  card.append(imageField('image').render(h));
+  card.append(el('label', { class: 'f' }, '背景影片（選填，mp4；填了就優先播影片、圖片變成載入前的畫面。注意版權，勿用平台共享素材）'));
+  card.append(imageField('video', { accept: 'video/mp4' }).render(h));
+  root.append(card);
+
+  const acard = el('div', { class: 'card' }, el('h3', {}, 'About Us 段落'));
+  acard.append(el('label', { class: 'f' }, '內文（空一行＝分段）'));
+  acard.append(paragraphsField('paragraphs', { label: '' }).render(data.home.about));
+  root.append(acard);
+
+  root.append(el('h3', { style: 'margin:18px 0 10px;' }, '北歐風格卡片'));
+  root.append(rowsEditor(data.home.styles, [
+    textField('title', { label: '風格名稱', retitle: true }),
+    imageField('image', { label: '圖片（建議直式 4:5）' }),
+  ], () => ({ title: '', image: '' }), it => it.title));
+}
+
+function sectionsEditor(root, obj) {
+  root.append(el('div', { class: 'small-note' }, '整頁分成數個段落區塊，每塊有小標＋內文。內文空一行＝分段。'));
+  root.append(rowsEditor(obj.sections, [
+    textField('heading', { label: '小標（第一塊通常留白）', retitle: true }),
+    paragraphsField('paragraphs'),
+  ], () => ({ heading: '', paragraphs: [] }), s => s.heading || '（開頭段落）'));
+}
+
+function renderAbout(root) {
+  const a = data.about;
+  const t = el('div', { class: 'card' }, el('h3', {}, '頁面標題'));
+  t.append(textField('title').render(a));
+  root.append(t);
+  sectionsEditor(root, a);
+
+  const ic = el('div', { class: 'card' }, el('h3', {}, '頁面圖片（兩張並排）'));
+  a.images.forEach((img, i) => {
+    ic.append(el('label', { class: 'f' }, '圖片 ' + (i + 1)));
+    ic.append(imageField('src').render(img));
+  });
+  root.append(ic);
+
+  const d = el('div', { class: 'card' }, el('h3', {}, '「大易設計」連結按鈕'));
+  d.append(el('label', { class: 'f' }, '按鈕文字'));
+  d.append(textField('text').render(a.dayi));
+  d.append(el('label', { class: 'f' }, '連結網址'));
+  d.append(textField('url').render(a.dayi));
+  root.append(d);
+
+  const w = el('div', { class: 'card' }, el('h3', {}, '獲獎紀錄'));
+  w.append(el('div', { class: 'hint' }, '每行一個獎項'));
+  const ta = el('textarea', { style: 'min-height:150px;', oninput: () => { a.awards = ta.value.split('\n').map(s => s.trim()).filter(Boolean); } });
+  ta.value = a.awards.join('\n');
+  w.append(ta);
+  root.append(w);
+}
+
+function renderHygge(root) {
+  const h = data.hygge;
+  const t = el('div', { class: 'card' }, el('h3', {}, '頁面標題與圖片'));
+  t.append(el('label', { class: 'f' }, '標題'));
+  t.append(textField('title').render(h));
+  t.append(el('label', { class: 'f' }, '頁面上方圖片'));
+  t.append(imageField('src').render(h.image));
+  root.append(t);
+  sectionsEditor(root, h);
+}
+
+function renderContact(root) {
+  const c = data.contact;
+  const card = el('div', { class: 'card' }, el('h3', {}, '聯絡頁內容'));
+  card.append(el('label', { class: 'f' }, '中文標題'));
+  card.append(textField('subheading').render(c));
+  card.append(el('label', { class: 'f' }, '說明文字（留白＝不顯示）'));
+  card.append(textField('paragraph', { area: true }).render(c));
+  card.append(el('label', { class: 'f' }, '地圖位置（可填「緯度,經度」或地址；地址搬家時改這裡＋網站設定的地址）'));
+  card.append(textField('mapQuery').render(c));
+  root.append(card);
+  root.append(el('div', { class: 'small-note' }, '地址、電話、傳真、Email 顯示在每一頁的頁尾和聯絡頁，請到「網站設定」分頁修改。'));
+}
+
+function renderSite(root) {
+  const s = data.site;
+  const card = el('div', { class: 'card' }, el('h3', {}, '全站共用設定'));
+  const f = (label, key) => {
+    card.append(el('label', { class: 'f' }, label));
+    const inp = el('input', { type: 'text', value: s[key], oninput: () => { s[key] = inp.value; } });
+    card.append(inp);
+  };
+  f('品牌全名（頁尾與網頁標題用）', 'brand');
+  f('品牌短名（左上角）', 'brandShort');
+  f('標語', 'tagline');
+  f('地址', 'address');
+  f('電話', 'tel');
+  f('傳真', 'fax');
+  f('Email', 'email');
+  f('頁尾版權文字', 'footerText');
+  card.append(el('label', { class: 'f' }, '網站描述（給搜尋引擎看的，會顯示在 Google 搜尋結果裡）'));
+  const ta = el('textarea', { oninput: () => { s.description = ta.value; } });
+  ta.value = s.description;
+  card.append(ta);
+  root.append(card);
+}
+
+const RENDERERS = { projects: renderProjects, home: renderHome, about: renderAbout, hygge: renderHygge, contact: renderContact, site: renderSite };
+
+/* ---------- 載入／儲存 ---------- */
+async function loadTab(name) {
+  current = name;
+  document.querySelectorAll('.tab').forEach(b => b.classList.toggle('active', b.dataset.name === name));
+  $('#pageTitle').textContent = TABS.find(t => t[0] === name)[1];
+  const root = $('#content');
+  root.innerHTML = '<p style="color:var(--soft)">載入中…</p>';
+  try {
+    if (!data[name]) data[name] = await loadData(name);
+    root.innerHTML = '';
+    RENDERERS[name](root);
+  } catch (e) {
+    root.innerHTML = '';
+    root.append(el('div', { class: 'card' }, '載入失敗：' + e.message));
+  }
+}
+
+async function saveCurrent() {
+  const btn = $('#saveBtn');
+  btn.disabled = true; btn.textContent = '儲存中…';
+  try {
+    // 儲存目前分頁的資料（附上載入時的版本，讓伺服器比對是否已被別處改動）
+    const r0 = await api('/api/data/' + current, {
+      method: 'PUT',
+      headers: { 'X-Data-Version': dataVersion[current] || '' },
+      body: JSON.stringify(data[current]),
+    });
+    if (r0.version) dataVersion[current] = r0.version;
+    btn.textContent = '更新網站中…';
+    await api('/api/build', { method: 'POST' });
+    toast('已儲存並更新網站！可以按「預覽網站」看看結果。');
+  } catch (e) {
+    toast('失敗：' + e.message, true);
+  } finally {
+    btn.disabled = false; btn.textContent = '儲存並更新網站';
+  }
+}
+
+async function publish() {
+  if (!gitReady) { toast('尚未設定 GitHub 發布——等網站正式上線後這顆按鈕就會啟用。', true); return; }
+  if (!confirm('確定要把目前的網站內容發布到正式網站嗎？')) return;
+  const btn = $('#publishBtn');
+  btn.disabled = true; btn.textContent = '發布中…';
+  try {
+    const r = await api('/api/publish', { method: 'POST' });
+    toast(r.output || '已發布！');
+  } catch (e) {
+    toast('發布失敗：' + e.message, true);
+  } finally {
+    btn.disabled = false; btn.textContent = '發布上線';
+  }
+}
+
+/* ---------- 啟動 ---------- */
+for (const [name, label] of TABS) {
+  $('#tabs').append(el('button', { class: 'tab', 'data-name': name, onclick: () => loadTab(name) }, label));
+}
+api('/api/status').then(s => { gitReady = s.git; if (!s.git) $('#publishBtn').style.opacity = 0.5; });
+loadTab('projects');
+</script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "banner": "/assets/img/works-banner.jpg",
+  "intro": "每一個家，都是一次對 hygge 生活的詮釋。",
+  "items": [
+    {
+      "slug": "1",
+      "title": "惠宇敦南",
+      "subtitle": "",
+      "desc": "",
+      "cover": "/assets/img/projects/1/01.jpg",
+      "images": [
+        "/assets/img/projects/1/01.jpg",
+        "/assets/img/projects/1/03.jpg",
+        "/assets/img/projects/1/04.jpg",
+        "/assets/img/projects/1/05.jpg",
+        "/assets/img/projects/1/06.jpg",
+        "/assets/img/projects/1/08.jpg",
+        "/assets/img/projects/1/15.jpg",
+        "/assets/img/projects/1/18.jpg"
+      ]
+    }
+  ]
+}
