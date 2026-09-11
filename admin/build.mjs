@@ -186,7 +186,7 @@ ${imgHtml}
       <h2 class="section-title">國際獎項肯定</h2>
     </div>
     <ul class="awards">
-${about.awards.map(a => `      <li>${esc(a)}</li>`).join('\n')}
+${about.awards.map(a => `      <li>${esc(a).replace(/（[^）]*）/g, m => `<span class="nowrap">${m}</span>`)}</li>`).join('\n')}
     </ul>
   </div>
 </section>`;
