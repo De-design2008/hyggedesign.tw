@@ -137,6 +137,9 @@ a { color: inherit; text-decoration: none; }
 .nowrap { white-space: nowrap; }
 /* 獎項的中文名稱固定換到第二行，從（）處斷行 */
 .awards .nowrap { display: block; color: var(--soft); }
+/* 獎項標誌集合圖：本身是白底，用白色卡片框起來才不會浮在米色背景上 */
+.awards-logos { background: #fff; border: 1px solid var(--line); padding: 36px 40px; margin-top: 48px; display: flex; justify-content: center; }
+.awards-logos img { max-width: 520px; width: 100%; }
 
 /* ---------- 按鈕 ---------- */
 .btn {

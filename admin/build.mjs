@@ -188,6 +188,7 @@ ${imgHtml}
     <ul class="awards">
 ${about.awards.map(a => `      <li>${esc(a).replace(/（[^）]*）/g, m => `<span class="nowrap">${m}</span>`)}</li>`).join('\n')}
     </ul>
+${about.awardsImage ? `    <div class="awards-logos"><img src="${attr(about.awardsImage)}" alt="國際設計獎項標誌" loading="lazy"></div>\n` : ''}
   </div>
 </section>`;
 

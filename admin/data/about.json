@@ -28,8 +28,10 @@
     }
   ],
   "images": [
-    { "src": "/assets/img/about-1.png", "alt": "大易設計作品" },
-    { "src": "/assets/img/about-2.png", "alt": "大易設計作品" }
+    {
+      "src": "/assets/img/about-2.png",
+      "alt": "大易設計作品——現代質感的豪宅客廳"
+    }
   ],
   "dayi": {
     "text": "連結 －「大易設計」網站",
@@ -45,5 +47,6 @@
     "韓國 Asia Design Prize（亞洲設計大獎）",
     "美國 International Design Awards（國際設計大獎）",
     "英國 International Creative Awards（國際創意獎）"
-  ]
+  ],
+  "awardsImage": "/assets/img/about-1.png"
 }

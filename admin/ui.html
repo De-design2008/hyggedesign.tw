@@ -318,7 +318,8 @@ function renderAbout(root) {
   root.append(t);
   sectionsEditor(root, a);
 
-  const ic = el('div', { class: 'card' }, el('h3', {}, '頁面圖片（兩張並排）'));
+  const ic = el('div', { class: 'card' }, el('h3', {}, '頁面圖片'));
+  ic.append(el('div', { class: 'hint' }, '放在故事段落後面。一張＝滿版寬，兩張＝並排。'));
   a.images.forEach((img, i) => {
     ic.append(el('label', { class: 'f' }, '圖片 ' + (i + 1)));
     ic.append(imageField('src').render(img));
@@ -337,6 +338,8 @@ function renderAbout(root) {
   const ta = el('textarea', { style: 'min-height:150px;', oninput: () => { a.awards = ta.value.split('\n').map(s => s.trim()).filter(Boolean); } });
   ta.value = a.awards.join('\n');
   w.append(ta);
+  w.append(el('label', { class: 'f' }, '獎項標誌集合圖（顯示在列表下方的白色卡片裡；留白＝不顯示）'));
+  w.append(imageField('awardsImage').render(a));
   root.append(w);
 }
 
