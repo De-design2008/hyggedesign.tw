@@ -34,7 +34,7 @@ function head({ title, desc, urlPath, ogImage }) {
 <meta property="og:description" content="${attr(desc || site.description)}">
 <meta property="og:url" content="${attr(site.url + urlPath)}">
 <meta property="og:image" content="${attr(site.url + (ogImage || home.hero.image || '/assets/img/style-cozy.jpg'))}">
-<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/favicon.ico" type="image/x-icon">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif+TC:wght@500;600&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
