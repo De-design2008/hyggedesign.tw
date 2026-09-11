@@ -1,6 +1,9 @@
 {
   "title": "悠+的設計理念",
-  "image": { "src": "/assets/img/philosophy.jpg", "alt": "北歐風格空間" },
+  "image": {
+    "src": "/assets/img/philosophy.jpg",
+    "alt": "灑滿陽光的北歐風閱讀角落——木質扶手椅與羊毛毯"
+  },
   "sections": [
     {
       "heading": "",
