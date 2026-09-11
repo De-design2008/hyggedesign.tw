@@ -113,17 +113,6 @@ a { color: inherit; text-decoration: none; }
 .teaser .btn { border-color: #f6f1e9; color: #f6f1e9; }
 .teaser .btn:hover { background: #f6f1e9; color: var(--ink); }
 
-/* ---------- 內頁橫幅 ---------- */
-.page-banner { position: relative; height: 340px; overflow: hidden; background: #26221d; }
-.page-banner img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
-.page-banner::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, #26221d11 30%, #26221d99 100%); }
-.page-banner .banner-text {
-  position: absolute; z-index: 2; inset: 0;
-  display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: #f6f1e9;
-}
-.page-banner h1 { font-family: var(--serif); font-weight: 500; font-size: clamp(32px, 5vw, 52px); letter-spacing: 0.06em; }
-.page-banner p { font-family: var(--serif-tc); letter-spacing: 0.5em; text-indent: 0.5em; margin-top: 12px; color: #f6f1e9cc; }
-
 /* ---------- 圖片列 ---------- */
 .img-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin: 52px 0; }
 .img-pair img { width: 100%; }

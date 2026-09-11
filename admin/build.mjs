@@ -142,14 +142,14 @@ ${styles}
   </div>
 </section>
 
-<section class="teaser">
-  <img src="${attr((firstCase && firstCase.cover) || projects.banner)}" alt="" loading="lazy">
+${(firstCase && firstCase.cover) ? `<section class="teaser">
+  <img src="${attr(firstCase.cover)}" alt="" loading="lazy">
   <div class="container">
     <div class="eyebrow">Selected Works</div>
     <h2>看看我們如何詮釋每一個家</h2>
     <a class="btn" href="/works.html">作品選輯</a>
   </div>
-</section>`;
+</section>` : ''}`;
 
   await writeFile(path.join(ROOT, 'index.html'),
     page(head({ title: pageTitle(''), urlPath: '/' }), '/', body), 'utf8');
@@ -260,21 +260,20 @@ const lightboxHtml = `
         <div class="cap"><span class="no">${String(i + 1).padStart(2, '0')}</span><h3>${esc(p.title)}</h3>${p.subtitle ? `<p>${esc(p.subtitle)}</p>` : ''}</div>
       </a>`).join('\n');
 
-  const body = `<section class="page-banner">
-  <img src="${attr(projects.banner)}" alt="">
-  <div class="banner-text"><h1>Works</h1><p>作品</p></div>
-</section>
-
-<section class="section">
+  const body = `<section class="section">
   <div class="container">
-${projects.intro ? `    <p class="center" style="color:var(--soft); letter-spacing:.12em;">${esc(projects.intro)}</p>\n` : ''}    <div class="project-grid">
+    <div class="center">
+      <div class="eyebrow">Works</div>
+      <h2 class="section-title">作品</h2>
+${projects.intro ? `      <p style="color:var(--soft); letter-spacing:.12em;">${esc(projects.intro)}</p>\n` : ''}    </div>
+    <div class="project-grid">
 ${cards}
     </div>
   </div>
 </section>`;
 
   await writeFile(path.join(ROOT, 'works.html'),
-    page(head({ title: pageTitle('作品'), urlPath: '/works.html', ogImage: projects.banner }), '/works.html', body), 'utf8');
+    page(head({ title: pageTitle('作品'), urlPath: '/works.html', ogImage: items[0] && items[0].cover }), '/works.html', body), 'utf8');
 
   // 內頁：先清掉舊檔，案例在後台被刪除或改名時才不會留下殘頁
   const worksDir = path.join(ROOT, 'works');

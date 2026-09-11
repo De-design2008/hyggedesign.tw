@@ -258,10 +258,8 @@ function renderProjects(root) {
     + '第一張照片會自動當作品列表的封面（也可以另外指定）。改完記得按右上角「儲存並更新網站」，'
     + '確認沒問題後再按「發布上線」。'));
 
-  const bcard = el('div', { class: 'card' }, el('h3', {}, '作品頁橫幅'));
-  bcard.append(el('label', { class: 'f' }, '頁面上方的大圖'));
-  bcard.append(imageField('banner').render(P));
-  bcard.append(el('label', { class: 'f' }, '開頭引言（留白＝不顯示）'));
+  const bcard = el('div', { class: 'card' }, el('h3', {}, '作品頁開頭'));
+  bcard.append(el('label', { class: 'f' }, '開頭引言（顯示在「作品」標題下方；留白＝不顯示）'));
   bcard.append(textField('intro').render(P));
   root.append(bcard);
 
