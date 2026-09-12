@@ -180,7 +180,7 @@ ${imgHtml}
     </div>
   </div>
 </section>
-
+${(about.awards && about.awards.length) ? `
 <section class="section alt">
   <div class="container narrow">
     <div class="center">
@@ -192,7 +192,7 @@ ${about.awards.map(a => `      <li>${esc(a).replace(/（[^）]*）/g, m => `<spa
     </ul>
 ${about.awardsImage ? `    <div class="awards-logos"><img src="${attr(about.awardsImage)}" alt="國際設計獎項標誌" loading="lazy"></div>\n` : ''}
   </div>
-</section>`;
+</section>` : ''}`;
 
   await writeFile(path.join(ROOT, 'about.html'),
     page(head({ title: pageTitle('關於．About'), urlPath: '/about.html' }), '/about.html', body), 'utf8');

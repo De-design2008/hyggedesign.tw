@@ -29,26 +29,12 @@
       ]
     }
   ],
-  "images": [
-    {
-      "src": "/assets/img/about-2.png",
-      "alt": "大易設計作品——現代質感的豪宅客廳"
-    }
-  ],
+  "images": [],
   "dayi": {
     "text": "連結 －「大易設計」網站",
     "url": "https://de-interior.tw/"
   },
   "awardsHeading": "Awards",
-  "awards": [
-    "美國 New York Design Awards（紐約設計獎）",
-    "英國 The London Design Awards（倫敦設計獎）",
-    "義大利 A' Design Award（A 設計大獎）",
-    "德國 Berlin Design Awards（柏林設計獎）",
-    "香港 The Hong Kong Design Awards（香港設計大獎）",
-    "韓國 Asia Design Prize（亞洲設計大獎）",
-    "美國 International Design Awards（國際設計大獎）",
-    "英國 International Creative Awards（國際創意獎）"
-  ],
+  "awards": [],
   "awardsImage": ""
 }
